@@ -1,0 +1,60 @@
+
+.conv{
+    padding: 2vmin 3vmin;
+    margin: 0;
+    font-family: Google Sans, arial, sans-serif;
+    line-height: 1.58;
+}
+
+#info{
+    font-size: 16px;
+    color: #70757a;
+    margin: 0;
+}
+
+#converted{
+    font-size: 36px;
+    color: #202124;
+    margin: 4px 0;
+}
+
+#calcDate{
+    font-size: 12px;
+    color: #70757a;
+    margin: 8px 0 16px 0;
+}
+
+.textInput{
+    font-size: 16px;
+    outline: 0;
+    border-radius: 6px;
+    border: 1px solid #dadce0;
+    color: #70757a;
+    height: 36px;
+    padding: 0 0 0 12px;
+    width: 150px !important;
+    margin-right: 10px;
+    cursor: text;
+}
+
+.curSelect{
+    -webkit-appearance: button;
+    outline: 0;
+    margin: 0;
+    border: none;
+    font-size: 13px;
+    list-style: none;
+    text-decoration: none;
+    vertical-align: middle;
+    width: 150px;
+    background-color: #fff;
+    color: #202124;
+    height: 36px !important;
+    padding-left: 8px;
+    border-radius: 6px;
+    border: 1px solid #dadce0;
+}
+
+.selectTop{
+    margin-bottom: 8px;
+}

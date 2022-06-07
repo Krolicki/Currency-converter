@@ -5,21 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Currency converter</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div>
+    <div class="conv">
         <p id="info">1 Euro to w przeliczeniu</p>
         <p id="converted"></p>
         <p id="calcDate"></p>
-        <input value="1" id="amount">
-        <select id="opt">
-            <option value="EUR">EUR</option>
-            <option value="USD">USD</option>
-        </select><br>
-        <input value="1" id="amountBot">
-        <select id="optBot">
-            <option value="PLN">PLN</option>
-        </select>
+        <div class="selectTop">
+        <input value="1" id="amount" class="textInput">
+            <select id="opt" class="curSelect">
+                <option value="EUR">EUR</option>
+                <option value="USD">USD</option>
+            </select><br>
+        </div>
+        <div class="selectBot">
+            <input value="1" id="amountBot" class="textInput">
+            <select id="optBot" class="curSelect">
+                <option value="PLN">PLN</option>
+            </select>
+        </div>
         <!--<button type="button" id="calc">Przelicz</button>-->
     </div>
     <script src="script.js"></script>
