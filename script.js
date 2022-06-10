@@ -59,7 +59,7 @@ async function getCurr(url) {
   }
 }
 
-amount.addEventListener("change", function(){
+amount.addEventListener("input", function(){
     let opti = opt.value;
     switch(opti){
         case 'EUR':
@@ -71,7 +71,12 @@ amount.addEventListener("change", function(){
     }
 })
 
-amountBot.addEventListener("change", function(){
+amount.addEventListener("change", function(){
+    if(this.value == "")
+        this.value = (0).toFixed(2);
+})
+
+amountBot.addEventListener("input", function(){
     let opti = opt.value;
     switch(opti){
         case 'EUR':
@@ -81,6 +86,11 @@ amountBot.addEventListener("change", function(){
             calcRate(usdRate, amount, this.value, true);
             break;
     }
+})
+
+amountBot.addEventListener("change", function(){
+    if(this.value == "")
+        this.value = (0).toFixed(2);
 })
 
 opt.addEventListener("change", function(){
