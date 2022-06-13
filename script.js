@@ -10,9 +10,11 @@ const testButton = document.getElementById("testButton");
 
 const eurLink = "http://api.nbp.pl/api/exchangerates/rates/A/EUR/?format=json";
 const usdLink = "http://api.nbp.pl/api/exchangerates/rates/A/USD/?format=json";
+const gbpLink = "http://api.nbp.pl/api/exchangerates/rates/A/gbp/?format=json";
 
 var eurRate;
 var usdRate;
+var gbpRate;
 
 function getRate(url, element, am, reverse){
     fetch(url)
@@ -45,6 +47,7 @@ async function getCurr(url) {
   async function assign(){
       usdRate = await getCurr(usdLink);
       eurRate = await getCurr(eurLink);
+      gbpRate = await getCurr(gbpLink);
 
   }
 
@@ -68,6 +71,9 @@ amount.addEventListener("input", function(){
         case 'USD':
             calcRate(usdRate, amountBot, this.value);
             break;
+        case 'GBP':
+            calcRate(gbpRate, amountBot, this.value);
+            break;
     }
 })
 
@@ -84,6 +90,9 @@ amountBot.addEventListener("input", function(){
             break;
         case 'USD':
             calcRate(usdRate, amount, this.value, true);
+            break;
+        case 'GBP':
+            calcRate(gbpRate, amount, this.value, true);
             break;
     }
 })
@@ -110,6 +119,12 @@ opt.addEventListener("change", function(){
             info.innerHTML = "1 Dolar amerykański to w przeliczeniu";
             getRate(usdLink, converted, 1);
             calcRate(usdRate, amountBot, amo);
+            break;
+        case 'GBP':
+            info.innerHTML = "1 Brytyjski funt szterling to w przeliczeniu";
+            getRate(gbpLink, converted, 1);
+            calcRate(gbpRate, amountBot, amo);
+            break;
     }
 
 })
