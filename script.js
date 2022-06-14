@@ -16,21 +16,16 @@ var eurRate;
 var usdRate;
 var gbpRate;
 
-function getRate(url, element, am, reverse){
+function getRate(url, init){
     fetch(url)
     .then(resp => {
         return resp.json();
     })
     .then(resp => {
         calcDate.innerHTML = "Na dzień: " + resp.rates[0].effectiveDate;
-        if(element.nodeName == "P")
-            element.innerHTML = (resp.rates[0].mid * am).toFixed(2) + " PLN";
-        if(element.nodeName == "INPUT"){
-            if(reverse)
-                element.value = (am / resp.rates[0].mid).toFixed(2);
-            else
-                element.value = (resp.rates[0].mid * am).toFixed(2);
-        }
+        converted.innerHTML = (resp.rates[0].mid).toFixed(2) + " PLN";
+        if(init)
+            amountBot.value = (resp.rates[0].mid).toFixed(2);
     })
     .catch(err => {
         console.log(err);
@@ -51,8 +46,6 @@ async function getCurr(url) {
 
   }
 
-
-
  function calcRate(rate, element, amount, rev){
     if(element.nodeName == "INPUT"){
         if(rev)
@@ -63,38 +56,44 @@ async function getCurr(url) {
 }
 
 amount.addEventListener("input", function(){
+    inputEvent("top", this.value)
+})
+
+amountBot.addEventListener("input", function(){
+    inputEvent("bot", this.value)
+})
+
+function inputEvent(element, val){
     let opti = opt.value;
+    let rever, target
+    if(element == "top"){
+        rever = false;
+        target = amountBot;
+    }
+    else if(element == "bot"){
+        rever = true;
+        target = amount;
+    }
+    else{
+        console.error("Wrong element in 'inputEvent'");
+        return;
+    }
     switch(opti){
         case 'EUR':
-            calcRate(eurRate, amountBot, this.value);
+            calcRate(eurRate, target, val, rever);
             break;
         case 'USD':
-            calcRate(usdRate, amountBot, this.value);
+            calcRate(usdRate, target, val, rever);
             break;
         case 'GBP':
-            calcRate(gbpRate, amountBot, this.value);
+            calcRate(gbpRate, target, val, rever);
             break;
     }
-})
+}
 
 amount.addEventListener("change", function(){
     if(this.value == "")
         this.value = (0).toFixed(2);
-})
-
-amountBot.addEventListener("input", function(){
-    let opti = opt.value;
-    switch(opti){
-        case 'EUR':
-            calcRate(eurRate, amount, this.value, true);
-            break;
-        case 'USD':
-            calcRate(usdRate, amount, this.value, true);
-            break;
-        case 'GBP':
-            calcRate(gbpRate, amount, this.value, true);
-            break;
-    }
 })
 
 amountBot.addEventListener("change", function(){
@@ -110,25 +109,24 @@ opt.addEventListener("change", function(){
             // if(optBot.value == 'EUR')
             //     optBot.value = 'PLN';
             info.innerHTML = "1 Euro to w przeliczeniu";
-            getRate(eurLink, converted, 1);
+            getRate(eurLink);
             calcRate(eurRate, amountBot, amo);
             break;
         case 'USD':
             // if(optBot.value == 'USD')
             //     optBot.value = 'PLN';
             info.innerHTML = "1 Dolar amerykański to w przeliczeniu";
-            getRate(usdLink, converted, 1);
+            getRate(usdLink);
             calcRate(usdRate, amountBot, amo);
             break;
         case 'GBP':
             info.innerHTML = "1 Brytyjski funt szterling to w przeliczeniu";
-            getRate(gbpLink, converted, 1);
+            getRate(gbpLink);
             calcRate(gbpRate, amountBot, amo);
             break;
     }
 
 })
 
-getRate(eurLink, converted, 1, false);
-getRate(eurLink, amountBot, 1, false);
+getRate(eurLink, true);
 assign();
