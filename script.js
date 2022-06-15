@@ -7,6 +7,7 @@ const amountBot = document.getElementById("amountBot");
 const calcDate = document.getElementById("calcDate");
 const info = document.getElementById("info");
 const testButton = document.getElementById("testButton");
+const calcSection = document.getElementById("calcSection");
 
 const eurLink = "http://api.nbp.pl/api/exchangerates/rates/A/EUR/?format=json";
 const usdLink = "http://api.nbp.pl/api/exchangerates/rates/A/USD/?format=json";
@@ -24,19 +25,28 @@ function getRate(url, init){
     .then(resp => {
         calcDate.innerHTML = "Na dzień: " + resp.rates[0].effectiveDate;
         converted.innerHTML = (resp.rates[0].mid).toFixed(2) + " PLN";
-        if(init)
+        if(init){
             amountBot.value = (resp.rates[0].mid).toFixed(2);
+            info.innerHTML = "1 Euro to w przeliczeniu";
+        }
     })
     .catch(err => {
-        console.log(err);
+        calcDate.innerHTML = "Błąd przy pobieraniu kursów. <br> Brak połączenia z serwerem.<br> Proszę odczekać chwilę i odświeżyć stronę.";
+        calcSection.style.display = "none";
+        console.log("Błąd przy pobieraniu kursów. Brak połączenia z serwerem");
     });
 }
 
 async function getCurr(url) {
-    const response = await fetch(url);
-    const data = await response.json();
-    const ret = data.rates[0].mid;
-    return ret;
+    try{
+        const response = await fetch(url);
+        const data = await response.json();
+        const ret = data.rates[0].mid;
+        return ret;
+    }
+    catch{
+        console.log("Błąd przy pobieraniu kursów. Brak połączenia z serwerem");
+    }
   }
   
   async function assign(){
