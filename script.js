@@ -65,12 +65,48 @@ async function getCurr(url) {
   }
 }
 
+function calcForeign(element){
+    let botCurr, topCurr;
+    function assignCurr(option){
+        switch(option){
+            case 'EUR':
+                return eurRate;
+            case 'USD':
+                return usdRate;
+            case 'GBP':
+                return gbpRate;
+            default:
+                return 1;
+        }
+    }
+
+    topCurr = assignCurr(opt.value);
+    botCurr = assignCurr(optBot.value);
+
+    if(element == "bot"){
+        amount.value = ((botCurr / topCurr) * amountBot.value).toFixed(2);
+    }
+    else if(element == "top"){
+        amountBot.value = ((topCurr / botCurr) * amount.value).toFixed(2);
+    }
+
+}
+
 amount.addEventListener("input", function(){
-    inputEvent("top", this.value)
+    if(opt.value == 'PLN'){
+        inputEvent("top", this.value)
+    }
+    else{
+        calcForeign("top");
+    }
 })
 
 amountBot.addEventListener("input", function(){
-    inputEvent("bot", this.value)
+    if(optBot.value == 'PLN')
+        inputEvent("bot", this.value)
+    else{
+        calcForeign("bot");
+    }
 })
 
 function inputEvent(element, val){
@@ -120,22 +156,28 @@ opt.addEventListener("change", function(){
             //     optBot.value = 'PLN';
             info.innerHTML = "1 Euro to w przeliczeniu";
             getRate(eurLink);
-            calcRate(eurRate, amountBot, amo);
+            calcForeign("top");
+            //calcRate(eurRate, amountBot, amo);
             break;
         case 'USD':
             // if(optBot.value == 'USD')
             //     optBot.value = 'PLN';
             info.innerHTML = "1 Dolar amerykański to w przeliczeniu";
             getRate(usdLink);
-            calcRate(usdRate, amountBot, amo);
+            calcForeign("top");
+            //calcRate(usdRate, amountBot, amo);
             break;
         case 'GBP':
             info.innerHTML = "1 Brytyjski funt szterling to w przeliczeniu";
             getRate(gbpLink);
-            calcRate(gbpRate, amountBot, amo);
+            calcForeign("top");
+            //calcRate(gbpRate, amountBot, amo);
             break;
     }
+})
 
+optBot.addEventListener("change", function(){
+        calcForeign("bot");
 })
 
 getRate(eurLink, true);
