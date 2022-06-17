@@ -17,6 +17,8 @@ var eurRate;
 var usdRate;
 var gbpRate;
 
+var prev;
+
 function getRate(url, init){
     fetch(url)
     .then(resp => {
@@ -134,6 +136,9 @@ function inputEvent(element, val){
         case 'GBP':
             calcRate(gbpRate, target, val, rever);
             break;
+        default:
+            calcForeign(element)
+            break;
     }
 }
 
@@ -148,15 +153,13 @@ amountBot.addEventListener("change", function(){
 })
 
 opt.addEventListener("change", function(){
-    let opti = opt.value;
-    let amo = amount.value;
-    switch(opti){
+    //let amo = amount.value;
+    switch(opt.value){
         case 'EUR':
             // if(optBot.value == 'EUR')
             //     optBot.value = 'PLN';
             info.innerHTML = "1 Euro to w przeliczeniu";
             getRate(eurLink);
-            calcForeign("top");
             //calcRate(eurRate, amountBot, amo);
             break;
         case 'USD':
@@ -164,20 +167,33 @@ opt.addEventListener("change", function(){
             //     optBot.value = 'PLN';
             info.innerHTML = "1 Dolar amerykański to w przeliczeniu";
             getRate(usdLink);
-            calcForeign("top");
             //calcRate(usdRate, amountBot, amo);
             break;
         case 'GBP':
             info.innerHTML = "1 Brytyjski funt szterling to w przeliczeniu";
             getRate(gbpLink);
-            calcForeign("top");
             //calcRate(gbpRate, amountBot, amo);
             break;
     }
+    if(optBot.value == this.value)
+        optBot.value = prev;
+    calcForeign("top");
 })
 
 optBot.addEventListener("change", function(){
-        calcForeign("bot");
+    if(opt.value == this.value)
+        opt.value = prev;
+    calcForeign("bot");
+})
+
+opt.addEventListener("focus", function(){
+    prev = this.value;
+    this.blur();
+})
+
+optBot.addEventListener("focus", function(){
+    prev = this.value;
+    this.blur();
 })
 
 getRate(eurLink, true);
