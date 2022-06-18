@@ -18,6 +18,7 @@ var usdRate;
 var gbpRate;
 
 var prev;
+var dateGet;
 
 function getRate(url, init){
     fetch(url)
@@ -44,6 +45,7 @@ async function getCurr(url) {
         const response = await fetch(url);
         const data = await response.json();
         const ret = data.rates[0].mid;
+        dateGet = data.rates[0].effectiveDate;
         return ret;
     }
     catch{
@@ -67,20 +69,34 @@ async function getCurr(url) {
   }
 }
 
+function assignCurr(option){
+    switch(option){
+        case 'EUR':
+            return eurRate;
+        case 'USD':
+            return usdRate;
+        case 'GBP':
+            return gbpRate;
+        default:
+            return 1;
+    }
+}
+
+function assignCurrStr(option){
+    switch(option){
+        case 'EUR':
+            return  "Euro to w przeliczeniu";
+        case 'USD':
+            return "Dolar amerykański to w przeliczeniu";
+        case 'GBP':
+            return "Brytyjski funt szterling to w przeliczeniu";
+        default:
+            return "";
+    }
+}
+
 function calcForeign(element){
     let botCurr, topCurr;
-    function assignCurr(option){
-        switch(option){
-            case 'EUR':
-                return eurRate;
-            case 'USD':
-                return usdRate;
-            case 'GBP':
-                return gbpRate;
-            default:
-                return 1;
-        }
-    }
 
     topCurr = assignCurr(opt.value);
     botCurr = assignCurr(optBot.value);
@@ -91,6 +107,18 @@ function calcForeign(element){
     else if(element == "top"){
         amountBot.value = ((topCurr / botCurr) * amount.value).toFixed(2);
     }
+
+}
+
+function changeCurrency(currency, init){
+    calcDate.innerHTML = "Na dzień: " + dateGet;
+    converted.innerHTML = eurRate.toFixed(2) + " PLN";
+    if(init){
+        amountBot.value = eurRate.toFixed(2);
+        info.innerHTML = "1 Euro to w przeliczeniu";
+    }
+    info.innerHTML = "1 " + assignCurrStr(currency);
+    converted.innerHTML = (assignCurr(currency)).toFixed(2) + " PLN";
 
 }
 
@@ -126,20 +154,10 @@ function inputEvent(element, val){
         console.error("Wrong element in 'inputEvent'");
         return;
     }
-    switch(opti){
-        case 'EUR':
-            calcRate(eurRate, target, val, rever);
-            break;
-        case 'USD':
-            calcRate(usdRate, target, val, rever);
-            break;
-        case 'GBP':
-            calcRate(gbpRate, target, val, rever);
-            break;
-        default:
-            calcForeign(element)
-            break;
-    }
+    if(opti != "PLN")
+        calcRate(assignCurr(opti), target, val, rever);
+    else
+        calcForeign(element);
 }
 
 amount.addEventListener("change", function(){
@@ -153,30 +171,13 @@ amountBot.addEventListener("change", function(){
 })
 
 opt.addEventListener("change", function(){
-    //let amo = amount.value;
-    switch(opt.value){
-        case 'EUR':
-            // if(optBot.value == 'EUR')
-            //     optBot.value = 'PLN';
-            info.innerHTML = "1 Euro to w przeliczeniu";
-            getRate(eurLink);
-            //calcRate(eurRate, amountBot, amo);
-            break;
-        case 'USD':
-            // if(optBot.value == 'USD')
-            //     optBot.value = 'PLN';
-            info.innerHTML = "1 Dolar amerykański to w przeliczeniu";
-            getRate(usdLink);
-            //calcRate(usdRate, amountBot, amo);
-            break;
-        case 'GBP':
-            info.innerHTML = "1 Brytyjski funt szterling to w przeliczeniu";
-            getRate(gbpLink);
-            //calcRate(gbpRate, amountBot, amo);
-            break;
-    }
     if(optBot.value == this.value)
-        optBot.value = prev;
+        optBot.value = prev;  
+    if(this.value == "PLN")
+        changeCurrency(optBot.value);
+    else
+        changeCurrency(this.value);
+
     calcForeign("top");
 })
 
