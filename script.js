@@ -27,7 +27,7 @@ function getRate(url, init){
     })
     .then(resp => {
         calcDate.innerHTML = "Na dzień: " + resp.rates[0].effectiveDate;
-        converted.innerHTML = (resp.rates[0].mid).toFixed(2) + " PLN";
+        converted.innerHTML = (resp.rates[0].mid).toFixed(2) + " Złoty";
         if(init){
             amountBot.value = (resp.rates[0].mid).toFixed(2);
             info.innerHTML = "1 Euro to w przeliczeniu";
@@ -85,13 +85,13 @@ function assignCurr(option){
 function assignCurrStr(option){
     switch(option){
         case 'EUR':
-            return  "Euro to w przeliczeniu";
+            return  "Euro";
         case 'USD':
-            return "Dolar amerykański to w przeliczeniu";
+            return "Dolar amerykański";
         case 'GBP':
-            return "Brytyjski funt szterling to w przeliczeniu";
+            return "Brytyjski funt szterling";
         default:
-            return "";
+            return "Złoty";
     }
 }
 
@@ -110,15 +110,14 @@ function calcForeign(element){
 
 }
 
-function changeCurrency(currency, init){
+function changeCurrency(init){
     calcDate.innerHTML = "Na dzień: " + dateGet;
-    converted.innerHTML = eurRate.toFixed(2) + " PLN";
     if(init){
         amountBot.value = eurRate.toFixed(2);
         info.innerHTML = "1 Euro to w przeliczeniu";
     }
-    info.innerHTML = "1 " + assignCurrStr(currency);
-    converted.innerHTML = (assignCurr(currency)).toFixed(2) + " PLN";
+        info.innerHTML = amount.value + " " + assignCurrStr(opt.value) + " to w przeliczeniu";
+        converted.innerHTML = amountBot.value + " " + assignCurrStr(optBot.value);
 
 }
 
@@ -171,20 +170,22 @@ amountBot.addEventListener("change", function(){
 })
 
 opt.addEventListener("change", function(){
+
     if(optBot.value == this.value)
         optBot.value = prev;  
-    if(this.value == "PLN")
-        changeCurrency(optBot.value);
-    else
-        changeCurrency(this.value);
 
     calcForeign("top");
+
+    changeCurrency();
 })
 
 optBot.addEventListener("change", function(){
     if(opt.value == this.value)
         opt.value = prev;
+
     calcForeign("bot");
+
+    changeCurrency();
 })
 
 opt.addEventListener("focus", function(){
