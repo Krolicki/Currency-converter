@@ -183,7 +183,7 @@ optBot.addEventListener("change", function(){
     if(opt.value == this.value)
         opt.value = prev;
 
-    calcForeign("bot");
+    calcForeign("top");
 
     changeCurrency();
 })
