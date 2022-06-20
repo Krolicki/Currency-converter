@@ -110,14 +110,10 @@ function calcForeign(element){
 
 }
 
-function changeCurrency(init){
-    calcDate.innerHTML = "Na dzień: " + dateGet;
-    if(init){
-        amountBot.value = eurRate.toFixed(2);
-        info.innerHTML = "1 Euro to w przeliczeniu";
-    }
-        info.innerHTML = amount.value + " " + assignCurrStr(opt.value) + " to w przeliczeniu";
-        converted.innerHTML = amountBot.value + " " + assignCurrStr(optBot.value);
+function changeCurrency(){
+    calcDate.innerHTML = "Na dzień: " + dateGet + " (NPB)";
+    info.innerHTML = amount.value + " " + assignCurrStr(opt.value) + " to w przeliczeniu";
+    converted.innerHTML = amountBot.value + " " + assignCurrStr(optBot.value);
 
 }
 
