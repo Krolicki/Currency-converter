@@ -13,12 +13,14 @@ const eurLink = "http://api.nbp.pl/api/exchangerates/rates/A/EUR/?format=json";
 const usdLink = "http://api.nbp.pl/api/exchangerates/rates/A/USD/?format=json";
 const gbpLink = "http://api.nbp.pl/api/exchangerates/rates/A/gbp/?format=json";
 
-var eurRate;
-var usdRate;
-var gbpRate;
+// var eurRate;
+// var usdRate;
+// var gbpRate;
 
 var prev;
 var dateGet;
+
+var currencyList = {};
 
 function getRate(url, init){
     fetch(url)
@@ -26,7 +28,7 @@ function getRate(url, init){
         return resp.json();
     })
     .then(resp => {
-        calcDate.innerHTML = "Na dzień: " + resp.rates[0].effectiveDate;
+        calcDate.innerHTML = "Na dzień: " + resp.rates[0].effectiveDate + " (NBP)";
         converted.innerHTML = (resp.rates[0].mid).toFixed(2) + " Złoty";
         if(init){
             amountBot.value = (resp.rates[0].mid).toFixed(2);
@@ -54,10 +56,16 @@ async function getCurr(url) {
   }
   
   async function assign(){
-      usdRate = await getCurr(usdLink);
-      eurRate = await getCurr(eurLink);
-      gbpRate = await getCurr(gbpLink);
 
+    currencyList = {
+        EUR : { name : 'Euro', rate : await getCurr(eurLink) },
+        USD : { name : 'Dolar amerykański', rate : await getCurr(usdLink) },
+        GBP : { name : 'Brytyjski funt szterling', rate : await getCurr(gbpLink) },
+        PLN : { name : 'Złoty', rate : 1 },
+    };
+    //   usdRate = await getCurr(usdLink);
+    //   eurRate = await getCurr(eurLink);
+    //   gbpRate = await getCurr(gbpLink);
   }
 
  function calcRate(rate, element, amount, rev){
@@ -69,37 +77,39 @@ async function getCurr(url) {
   }
 }
 
-function assignCurr(option){
-    switch(option){
-        case 'EUR':
-            return eurRate;
-        case 'USD':
-            return usdRate;
-        case 'GBP':
-            return gbpRate;
-        default:
-            return 1;
-    }
-}
+// function assignCurr(option){
+//     switch(option){
+//         case 'EUR':
+//             return eurRate;
+//         case 'USD':
+//             return usdRate;
+//         case 'GBP':
+//             return gbpRate;
+//         default:
+//             return 1;
+//     }
+// }
 
-function assignCurrStr(option){
-    switch(option){
-        case 'EUR':
-            return  "Euro";
-        case 'USD':
-            return "Dolar amerykański";
-        case 'GBP':
-            return "Brytyjski funt szterling";
-        default:
-            return "Złoty";
-    }
-}
+// function assignCurrStr(option){
+//     switch(option){
+//         case 'EUR':
+//             return  "Euro";
+//         case 'USD':
+//             return "Dolar amerykański";
+//         case 'GBP':
+//             return "Brytyjski funt szterling";
+//         default:
+//             return "Złoty";
+//     }
+// }
 
 function calcForeign(element){
     let botCurr, topCurr;
+    // topCurr = assignCurr(opt.value);
+    // botCurr = assignCurr(optBot.value);
 
-    topCurr = assignCurr(opt.value);
-    botCurr = assignCurr(optBot.value);
+    topCurr = currencyList[opt.value].rate;
+    botCurr = currencyList[optBot.value].rate;
 
     if(element == "bot"){
         amount.value = ((botCurr / topCurr) * amountBot.value).toFixed(2);
@@ -111,9 +121,9 @@ function calcForeign(element){
 }
 
 function changeCurrency(){
-    calcDate.innerHTML = "Na dzień: " + dateGet + " (NPB)";
-    info.innerHTML = amount.value + " " + assignCurrStr(opt.value) + " to w przeliczeniu";
-    converted.innerHTML = amountBot.value + " " + assignCurrStr(optBot.value);
+    calcDate.innerHTML = "Na dzień: " + dateGet + " (NBP)";
+    info.innerHTML = amount.value + " " + currencyList[opt.value].name + " to w przeliczeniu";
+    converted.innerHTML = amountBot.value + " " + currencyList[optBot.value].name;
 
 }
 
@@ -150,7 +160,7 @@ function inputEvent(element, val){
         return;
     }
     if(opti != "PLN")
-        calcRate(assignCurr(opti), target, val, rever);
+        calcRate(currencyList[opt.value].rate, target, val, rever);
     else
         calcForeign(element);
 }
