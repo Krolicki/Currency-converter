@@ -9,13 +9,9 @@ const info = document.getElementById("info");
 const testButton = document.getElementById("testButton");
 const calcSection = document.getElementById("calcSection");
 
-const eurLink = "http://api.nbp.pl/api/exchangerates/rates/A/EUR/?format=json";
-const usdLink = "http://api.nbp.pl/api/exchangerates/rates/A/USD/?format=json";
-const gbpLink = "http://api.nbp.pl/api/exchangerates/rates/A/gbp/?format=json";
-
-// var eurRate;
-// var usdRate;
-// var gbpRate;
+const eurLink = "http://api.nbp.pl/api/exchangerates/rates/A/EUR/";
+const usdLink = "http://api.nbp.pl/api/exchangerates/rates/A/USD/";
+const gbpLink = "http://api.nbp.pl/api/exchangerates/rates/A/GBP/";
 
 var prev;
 var dateGet;
@@ -45,6 +41,7 @@ function getRate(url, init){
 async function getCurr(url) {
     try{
         const response = await fetch(url);
+        //const response = await fetch("http://api.nbp.pl/api/exchangerates/rates/A/"+url);
         const data = await response.json();
         const ret = data.rates[0].mid;
         dateGet = data.rates[0].effectiveDate;
@@ -63,9 +60,22 @@ async function getCurr(url) {
         GBP : { name : 'Brytyjski funt szterling', rate : await getCurr(gbpLink) },
         PLN : { name : 'Złoty', rate : 1 },
     };
-    //   usdRate = await getCurr(usdLink);
-    //   eurRate = await getCurr(eurLink);
-    //   gbpRate = await getCurr(gbpLink);
+
+    Object.entries(currencyList).forEach(([key, value]) => {
+        let el = document.createElement('option');
+        el.value = key;
+        el.innerHTML = value.name;
+
+        let el2 = document.createElement('option');
+        el2.value = key;
+        el2.innerHTML = value.name;
+
+        if(key != "EUR")
+            opt.append(el);
+        if(key != "PLN")
+            optBot.append(el2);
+    });
+
   }
 
  function calcRate(rate, element, amount, rev){
@@ -77,36 +87,8 @@ async function getCurr(url) {
   }
 }
 
-// function assignCurr(option){
-//     switch(option){
-//         case 'EUR':
-//             return eurRate;
-//         case 'USD':
-//             return usdRate;
-//         case 'GBP':
-//             return gbpRate;
-//         default:
-//             return 1;
-//     }
-// }
-
-// function assignCurrStr(option){
-//     switch(option){
-//         case 'EUR':
-//             return  "Euro";
-//         case 'USD':
-//             return "Dolar amerykański";
-//         case 'GBP':
-//             return "Brytyjski funt szterling";
-//         default:
-//             return "Złoty";
-//     }
-// }
-
 function calcForeign(element){
     let botCurr, topCurr;
-    // topCurr = assignCurr(opt.value);
-    // botCurr = assignCurr(optBot.value);
 
     topCurr = currencyList[opt.value].rate;
     botCurr = currencyList[optBot.value].rate;
