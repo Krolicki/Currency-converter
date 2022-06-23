@@ -13,6 +13,8 @@ const eurLink = "http://api.nbp.pl/api/exchangerates/rates/A/EUR/";
 const usdLink = "http://api.nbp.pl/api/exchangerates/rates/A/USD/";
 const gbpLink = "http://api.nbp.pl/api/exchangerates/rates/A/GBP/";
 
+const codesList = ["USD",  "EUR", "GBP", "CHF", "RUB"]
+
 var prev;
 var dateGet;
 
@@ -40,26 +42,54 @@ function getRate(url, init){
 
 async function getCurr(url) {
     try{
-        const response = await fetch(url);
-        //const response = await fetch("http://api.nbp.pl/api/exchangerates/rates/A/"+url);
+        //const response = await fetch(url);
+        const response = await fetch("http://api.nbp.pl/api/exchangerates/rates/A/"+url);
         const data = await response.json();
-        const ret = data.rates[0].mid;
+        const rate = data.rates[0].mid;
+        //const name = data.Currency;
         dateGet = data.rates[0].effectiveDate;
-        return ret;
+        //return [rate,name];
+        return rate;
     }
     catch{
         console.log("Błąd przy pobieraniu kursów. Brak połączenia z serwerem");
     }
   }
+
+async function getCurr2(code){
+    try{
+        const response = await fetch("http://api.nbp.pl/api/exchangerates/rates/A/"+code);
+        const data = await response.json();
+        const currencyRate = data.rates[0].mid;
+        let currencyName = data.currency;
+        currencyName = currencyName.charAt(0).toUpperCase() + currencyName.slice(1);
+        code = code.toUpperCase();
+        currencyList[code] = { name : currencyName, rate : currencyRate};
+        dateGet = data.rates[0].effectiveDate;
+    }
+    catch(err){
+        console.log("Błąd przy pobieraniu kursów. Brak połączenia z serwerem");
+        console.log(err);
+    }
+}
   
   async function assign(){
 
-    currencyList = {
-        EUR : { name : 'Euro', rate : await getCurr(eurLink) },
-        USD : { name : 'Dolar amerykański', rate : await getCurr(usdLink) },
-        GBP : { name : 'Brytyjski funt szterling', rate : await getCurr(gbpLink) },
-        PLN : { name : 'Złoty', rate : 1 },
-    };
+    // currencyList = {
+    //     // EUR : { name : 'Euro', rate : await getCurr(eurLink) },
+    //     // USD : { name : 'Dolar amerykański', rate : await getCurr(usdLink) },
+    //     // GBP : { name : 'Brytyjski funt szterling', rate : await getCurr(gbpLink) },
+    //     EUR : { name : 'Euro', rate : await getCurr("EUR") },
+    //     USD : { name : 'Dolar amerykański', rate : await getCurr("USD") },
+    //     GBP : { name : 'Brytyjski funt szterling', rate : await getCurr("GBP") },
+    //     PLN : { name : 'Złoty', rate : 1 },
+    // };
+
+    for(i = 0; i < codesList.length; i++){
+        await getCurr2(codesList[i]);
+    }
+
+    currencyList["PLN"] = { name : "Złoty", rate : 1};
 
     Object.entries(currencyList).forEach(([key, value]) => {
         let el = document.createElement('option');
