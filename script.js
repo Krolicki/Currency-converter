@@ -8,12 +8,13 @@ const calcDate = document.getElementById("calcDate");
 const info = document.getElementById("info");
 const testButton = document.getElementById("testButton");
 const calcSection = document.getElementById("calcSection");
+const conv = document.querySelector(".conv");
 
 const eurLink = "http://api.nbp.pl/api/exchangerates/rates/A/EUR/";
 const usdLink = "http://api.nbp.pl/api/exchangerates/rates/A/USD/";
 const gbpLink = "http://api.nbp.pl/api/exchangerates/rates/A/GBP/";
 
-const codesList = ["USD",  "EUR", "GBP", "CHF", "RUB"]
+//const codesList = ["USD",  "EUR", "GBP", "CHF", "RUB"]
 
 var prev;
 var dateGet;
@@ -40,23 +41,23 @@ function getRate(url, init){
     });
 }
 
-async function getCurr(url) {
-    try{
-        //const response = await fetch(url);
-        const response = await fetch("http://api.nbp.pl/api/exchangerates/rates/A/"+url);
-        const data = await response.json();
-        const rate = data.rates[0].mid;
-        //const name = data.Currency;
-        dateGet = data.rates[0].effectiveDate;
-        //return [rate,name];
-        return rate;
-    }
-    catch{
-        console.log("Błąd przy pobieraniu kursów. Brak połączenia z serwerem");
-    }
-  }
+// async function getCurr(url) {
+//     try{
+//         //const response = await fetch(url);
+//         const response = await fetch("http://api.nbp.pl/api/exchangerates/rates/A/"+url);
+//         const data = await response.json();
+//         const rate = data.rates[0].mid;
+//         //const name = data.Currency;
+//         dateGet = data.rates[0].effectiveDate;
+//         //return [rate,name];
+//         return rate;
+//     }
+//     catch{
+//         console.log("Błąd przy pobieraniu kursów. Brak połączenia z serwerem");
+//     }
+//   }
 
-async function getCurr2(code){
+async function getCurr(code){
     try{
         const response = await fetch("http://api.nbp.pl/api/exchangerates/rates/A/"+code);
         const data = await response.json();
@@ -75,18 +76,21 @@ async function getCurr2(code){
   
   async function assign(){
 
-    // currencyList = {
-    //     // EUR : { name : 'Euro', rate : await getCurr(eurLink) },
-    //     // USD : { name : 'Dolar amerykański', rate : await getCurr(usdLink) },
-    //     // GBP : { name : 'Brytyjski funt szterling', rate : await getCurr(gbpLink) },
-    //     EUR : { name : 'Euro', rate : await getCurr("EUR") },
-    //     USD : { name : 'Dolar amerykański', rate : await getCurr("USD") },
-    //     GBP : { name : 'Brytyjski funt szterling', rate : await getCurr("GBP") },
-    //     PLN : { name : 'Złoty', rate : 1 },
-    // };
+    const codesList = await fetch('./codes.json')
+    .then(response => {
+         return response.json();
+    })
+    .catch( () => {
+        console.log("Błąd przy odczycie pliku");
+        let el = document.createElement('p');
+        el.innerHTML = "Błąd przy pobieraniu listy walut"
+        conv.appendChild(el);
+        amount.disabled = true;
+        amountBot.disabled = true;
+    });
 
-    for(i = 0; i < codesList.length; i++){
-        await getCurr2(codesList[i]);
+    for(i = 0; i < codesList.code.length; i++){
+        await getCurr(codesList.code[i]);
     }
 
     currencyList["PLN"] = { name : "Złoty", rate : 1};
