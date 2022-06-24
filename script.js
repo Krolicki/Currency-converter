@@ -10,10 +10,6 @@ const testButton = document.getElementById("testButton");
 const calcSection = document.getElementById("calcSection");
 const conv = document.querySelector(".conv");
 
-const eurLink = "http://api.nbp.pl/api/exchangerates/rates/A/EUR/";
-const usdLink = "http://api.nbp.pl/api/exchangerates/rates/A/USD/";
-const gbpLink = "http://api.nbp.pl/api/exchangerates/rates/A/GBP/";
-
 //const codesList = ["USD",  "EUR", "GBP", "CHF", "RUB"]
 
 var prev;
@@ -21,41 +17,24 @@ var dateGet;
 
 var currencyList = {};
 
-function getRate(url, init){
-    fetch(url)
+function initialize(){
+    fetch("http://api.nbp.pl/api/exchangerates/rates/A/EUR/")
     .then(resp => {
         return resp.json();
     })
     .then(resp => {
         calcDate.innerHTML = "Na dzień: " + resp.rates[0].effectiveDate + " (NBP)";
         converted.innerHTML = (resp.rates[0].mid).toFixed(2) + " Złoty";
-        if(init){
-            amountBot.value = (resp.rates[0].mid).toFixed(2);
-            info.innerHTML = "1 Euro to w przeliczeniu";
-        }
+        amountBot.value = (resp.rates[0].mid).toFixed(2);
+        info.innerHTML = "1 Euro to w przeliczeniu";
     })
     .catch(err => {
         calcDate.innerHTML = "Błąd przy pobieraniu kursów. <br> Brak połączenia z serwerem.<br> Proszę odczekać chwilę i odświeżyć stronę.";
         calcSection.style.display = "none";
         console.log("Błąd przy pobieraniu kursów. Brak połączenia z serwerem");
+        console.log(err);
     });
 }
-
-// async function getCurr(url) {
-//     try{
-//         //const response = await fetch(url);
-//         const response = await fetch("http://api.nbp.pl/api/exchangerates/rates/A/"+url);
-//         const data = await response.json();
-//         const rate = data.rates[0].mid;
-//         //const name = data.Currency;
-//         dateGet = data.rates[0].effectiveDate;
-//         //return [rate,name];
-//         return rate;
-//     }
-//     catch{
-//         console.log("Błąd przy pobieraniu kursów. Brak połączenia z serwerem");
-//     }
-//   }
 
 async function getCurr(code){
     try{
@@ -220,5 +199,5 @@ optBot.addEventListener("focus", function(){
     this.blur();
 })
 
-getRate(eurLink, true);
+initialize();
 assign();
