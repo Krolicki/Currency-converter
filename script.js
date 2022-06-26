@@ -13,7 +13,6 @@ const conv = document.querySelector(".conv");
 //const codesList = ["USD",  "EUR", "GBP", "CHF", "RUB"]
 
 var prev;
-var dateGet;
 
 var currencyList = {};
 
@@ -41,10 +40,11 @@ async function getCurr(code){
         const response = await fetch("http://api.nbp.pl/api/exchangerates/rates/A/"+code);
         const data = await response.json();
         const currencyRate = data.rates[0].mid;
+        const currencyDate = data.rates[0].effectiveDate;
         let currencyName = data.currency;
         currencyName = currencyName.charAt(0).toUpperCase() + currencyName.slice(1);
         code = code.toUpperCase();
-        currencyList[code] = { name : currencyName, rate : currencyRate};
+        currencyList[code] = { name : currencyName, rate : currencyRate, date : currencyDate};
         dateGet = data.rates[0].effectiveDate;
     }
     catch(err){
@@ -72,7 +72,7 @@ async function getCurr(code){
         await getCurr(codesList.code[i]);
     }
 
-    currencyList["PLN"] = { name : "Złoty", rate : 1};
+    currencyList["PLN"] = { name : "Złoty", rate : 1, date : new Date().toISOString().slice(0, 10)};
 
     let toSort  = [];
 
@@ -130,8 +130,18 @@ function calcForeign(element){
 
 }
 
+function compareDate(){
+    let optDate = currencyList[opt.value].date;
+    let optBotDate = currencyList[optBot.value].date;
+    if(optDate < optBotDate)
+        return optDate;
+    if(optBotDate < optDate)
+        return optBotDate;
+    return optBotDate;
+}
+
 function changeCurrency(){
-    calcDate.innerHTML = "Na dzień: " + dateGet + " (NBP)";
+    calcDate.innerHTML = "Na dzień: " + compareDate() + " (NBP)";
     info.innerHTML = amount.value + " " + currencyList[opt.value].name + " to w przeliczeniu";
     converted.innerHTML = amountBot.value + " " + currencyList[optBot.value].name;
 
