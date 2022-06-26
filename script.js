@@ -74,20 +74,35 @@ async function getCurr(code){
 
     currencyList["PLN"] = { name : "Złoty", rate : 1};
 
-    Object.entries(currencyList).forEach(([key, value]) => {
+    let toSort  = [];
+
+    Object.entries(currencyList).forEach(([key, value], index) => {
+        toSort[index] = [ key, value.name];
+    });
+
+    toSort.sort((a,b) => {
+        return a[1].localeCompare(b[1]);
+    });
+    //Object.entries(currencyList).forEach(([key, value]) => {
+    for(element of toSort){
+        let key = element[0];
+        let value = element[1];
+
         let el = document.createElement('option');
         el.value = key;
-        el.innerHTML = value.name;
+        el.innerHTML = value;
 
         let el2 = document.createElement('option');
         el2.value = key;
-        el2.innerHTML = value.name;
+        el2.innerHTML = value;
 
-        if(key != "EUR")
+        //if(key != "EUR")
             opt.append(el);
-        if(key != "PLN")
+        //if(key != "PLN")
             optBot.append(el2);
-    });
+    };
+    opt.value = "EUR";
+    optBot.value = "PLN";
 
   }
 
