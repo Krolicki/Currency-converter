@@ -1,4 +1,8 @@
-
+.content{
+    width: 800px;
+    display: flex;
+    
+}
 .conv{
     padding: 2vmin 3vmin;
     margin: 0;
@@ -65,4 +69,11 @@ input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none; 
+}
+
+.chart{
+    max-width: 400px;
+    max-height: 225px;
+    margin-top: 50px;
+
 }

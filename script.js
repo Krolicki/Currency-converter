@@ -226,3 +226,28 @@ optBot.addEventListener("focus", function(){
 
 initialize();
 assign();
+  
+  const labels = ["2022-06-20", "2022-06-21", "2022-06-22", "2022-06-23"," 2022-06-24", "2022-06-25", "2022-06-26"];
+
+  new Chart("myChart", {
+    type: "line",
+    data:{
+    labels: labels,
+    datasets: [{
+        label: 'EUR',
+        data: [4.5, 4.6, 4.7, 4.3, 4.7, 4.2, 4.8],
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+        }
+    ]},
+    options: {
+        scales: {
+           xAxes: [{
+                   ticks: {
+                    fontSize: 9
+                   }
+                  }]
+                }
+             }
+});
