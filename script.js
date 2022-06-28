@@ -104,6 +104,7 @@ async function getCurr(code){
     opt.value = "EUR";
     optBot.value = "PLN";
 
+    drawChart("EUR");
   }
 
  function calcRate(rate, element, amount, rev){
@@ -224,7 +225,5 @@ optBot.addEventListener("focus", function(){
     prev = this.value;
     this.blur();
 })
-
-initialize();
 assign();
-drawChart("EUR");
+initialize();
