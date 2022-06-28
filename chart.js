@@ -1,9 +1,13 @@
 async function drawChart(currency){
+    const canvas = document.getElementById("chart");
     var today = new Date(currencyList[currency].date);
     var pastDate = new Date(today);
     let labels =[];
     let data =[];
-    pastDate.setDate(today.getDate() - 6);
+
+    var days = 14;
+
+    pastDate.setDate(today.getDate() - days);
     pastDate = pastDate.toISOString().slice(0, 10);
     today = today.toISOString().slice(0, 10);
 
@@ -16,47 +20,78 @@ async function drawChart(currency){
                 labels.push(dayRate.effectiveDate);
                 data.push(dayRate.mid);
             }
-            new Chart("myChart", {
+            var gradient = canvas.getContext('2d').createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(52,168,83,0.4)');  
+            gradient.addColorStop(0.5, 'rgba(52,168,83,0.1)'); 
+            gradient.addColorStop(1, 'rgba(255,255,255,0)');
+
+            new Chart(canvas, {
                 type: "line",
                 data:{
                 labels: labels,
                 datasets: [{
                     label: currency,
                     data: data,
-                    fill: false,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
-                    // fill: true,
-                    // lineTension: 0.1,
-                    // backgroundColor: "#f9f9f9",
-                    // borderColor: "#72bce3",
-                    // borderCapStyle: 'butt',
-                    // borderDash: [],
-                    // borderDashOffset: 0.0,
-                    // borderJoinStyle: 'miter',
-                    // pointBorderColor: "black",
-                    // pointBackgroundColor: "#fff",
-                    // pointBorderWidth: 1,
-                    // pointHoverRadius: 5,
-                    // pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                    // pointHoverBorderColor: "rgba(220,220,220,1)",
-                    // pointHoverBorderWidth: 2,
-                    // pointRadius: 1,
-                    // pointHitRadius: 10,
+                    // fill: false,
+                    // borderColor: 'rgb(75, 192, 192)',
+                    // tension: 0.1
+                    fill: true,
+                    lineTension: 0.1,
+                    backgroundColor: gradient,
+                    borderColor: "rgba(52,168,83,1)",
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: "rgba(52,168,83,1)",
+                    pointBackgroundColor: "rgba(52,168,83,1)",
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: "rgba(52,168,83,1)",
+                    pointHoverBorderColor: "rgba(220,220,220,1)",
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 1,
+                    pointHitRadius: 10,
                     }
                 ]},
                 options: {
                     scales: {
-                    xAxes: [{
+                        xAxes: [{
+                                ticks: {
+                                    fontSize: 10,
+                                    maxRotation: 0,
+                                    autoSkip: true,
+                                    maxTicksLimit: 3,
+                                    // autoSkip:false,
+                                    // callback: function(tick, index, array) {
+                                    //     if(index == Math.floor(days / 2 - 1) || (index == Math.floor(days /3 - 1 )))
+                                    //         return tick;
+                                    //     else
+                                    //         return "";
+                                        
+                                    //     //return ((index != Math.floor(days /2)) || (index != Math.floor(days /3))) ? "" : tick;
+                                    // }
+                                },
+                                gridLines: {
+                                    display: false
+                                } 
+                                }],
+                        yAxes: [{
                             ticks: {
-                                fontSize: 9,
-                                callback: function(tick, index, array) {
-                                    return (index % 2) ? "" : tick;
-                                }
-                            }
-                            }]
-                            }
-                        }
+                                fontSize: 10,
+                                autoSkip: true,
+                                maxTicksLimit: 3,
+                                // callback: function(tick, index, array) {
+                                //     return (index % 2) ? "" : tick;
+                                // }
+                            },  
+                        }]
+                    },
+                    legend: {
+                        display: false
+                    }
+                }
+                        
             });
         })
         .catch(err => {
