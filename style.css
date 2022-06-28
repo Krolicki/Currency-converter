@@ -72,16 +72,30 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .chart{
-    max-width: 400px;
-    max-height: 225px;
-    margin-top: 50px;
+    max-width: 315px;
+    margin-top: 20px;
 
 }
 
 .chartButtons{
-    padding-top: 30px;
+    padding-top: 60px;
+    padding-left: 20px;
+    padding-right: 20px;
+    display: flex;
+    justify-content: space-around;
+
 }
 
 .chartButtons button{
+    padding: 6px;
+    background: transparent;
+    border: none;
+    font-size: 12px;
+    color: #70757a;
+}
 
+.activeButton{
+    background: #f8f9fa !important;
+    border-radius: 30px;
+    color: #3367d6 !important;
 }
