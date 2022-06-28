@@ -1,11 +1,13 @@
-async function drawChart(currency){
+var theChart = null;
+
+async function drawChart(currency, daysToShow){
     const canvas = document.getElementById("chart");
     var today = new Date(currencyList[currency].date);
     var pastDate = new Date(today);
     let labels =[];
     let data =[];
 
-    var days = 14;
+    var days = daysToShow;
 
     pastDate.setDate(today.getDate() - days);
     pastDate = pastDate.toISOString().slice(0, 10);
@@ -20,12 +22,21 @@ async function drawChart(currency){
                 labels.push(dayRate.effectiveDate);
                 data.push(dayRate.mid);
             }
+
             var gradient = canvas.getContext('2d').createLinearGradient(0, 0, 0, 300);
             gradient.addColorStop(0, 'rgba(52,168,83,0.4)');  
             gradient.addColorStop(0.5, 'rgba(52,168,83,0.1)'); 
             gradient.addColorStop(1, 'rgba(255,255,255,0)');
 
-            new Chart(canvas, {
+            if(theChart != null){
+                // console.log("jest");
+                // theChart.data.datasets.data = data;
+                // theChart.data.labels = labels;
+                // theChart.update();
+                theChart.destroy();
+            }
+
+            theChart = new Chart(canvas, {
                 type: "line",
                 data:{
                 labels: labels,
@@ -94,6 +105,7 @@ async function drawChart(currency){
                         
             });
         })
+        
         .catch(err => {
             // calcDate.innerHTML = "Błąd przy pobieraniu kursów. <br> Brak połączenia z serwerem.<br> Proszę odczekać chwilę i odświeżyć stronę.";
             // calcSection.style.display = "none";
