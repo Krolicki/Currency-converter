@@ -23,9 +23,9 @@ async function drawChart(currency, daysToShow){
                 data.push(dayRate.mid);
             }
 
-            var gradient = canvas.getContext('2d').createLinearGradient(0, 0, 0, 300);
-            gradient.addColorStop(0, 'rgba(52,168,83,0.4)');  
-            gradient.addColorStop(0.5, 'rgba(52,168,83,0.1)'); 
+            var gradient = canvas.getContext('2d').createLinearGradient(0, 0, 0, 170);
+            gradient.addColorStop(0, 'rgba(52,168,83,0.4)');
+           // gradient.addColorStop(0.5, 'rgba(52,168,83,0.1)');
             gradient.addColorStop(1, 'rgba(255,255,255,0)');
 
             if(theChart != null){
@@ -52,6 +52,7 @@ async function drawChart(currency, daysToShow){
                     borderColor: "rgba(52,168,83,1)",
                     borderCapStyle: 'butt',
                     borderDash: [],
+                    borderWidth: 2,
                     borderDashOffset: 0.0,
                     borderJoinStyle: 'miter',
                     pointBorderColor: "rgba(52,168,83,1)",
@@ -60,9 +61,9 @@ async function drawChart(currency, daysToShow){
                     pointHoverRadius: 5,
                     pointHoverBackgroundColor: "rgba(52,168,83,1)",
                     pointHoverBorderColor: "rgba(220,220,220,1)",
-                    pointHoverBorderWidth: 2,
-                    pointRadius: 1,
-                    pointHitRadius: 10,
+                    pointHoverBorderWidth: 1,
+                    pointRadius: 0,
+                    pointHitRadius: 1,
                     }
                 ]},
                 options: {
