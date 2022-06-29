@@ -1,14 +1,14 @@
 .content{
-    width: 800px;
+    width: 700px;
     display: flex;
+    padding: 2vmin 3vmin;
     
 }
 .conv{
-    padding: 2vmin 3vmin;
     margin: 0;
     font-family: Google Sans, arial, sans-serif;
     line-height: 1.58;
-    max-width: 400px;
+    width: 50%
 }
 
 #info{
@@ -51,7 +51,7 @@
     list-style: none;
     text-decoration: none;
     vertical-align: middle;
-    width: 150px;
+    width: 170px;
     background-color: #fff;
     color: #202124;
     height: 36px !important;
@@ -71,14 +71,17 @@ input[type=number]::-webkit-outer-spin-button {
     appearance: none; 
 }
 
+.chartDiv{
+    width: 50%;
+}
+
 .chart{
     max-width: 315px;
     margin-top: 20px;
-
 }
 
 .chartButtons{
-    padding-top: 60px;
+    padding-top: 40px;
     padding-left: 20px;
     padding-right: 20px;
     display: flex;
@@ -98,4 +101,22 @@ input[type=number]::-webkit-outer-spin-button {
     background: #f8f9fa !important;
     border-radius: 30px;
     color: #3367d6 !important;
+}
+
+@media only screen and (max-width: 750px) {
+    .content{ 
+        flex-direction: column;
+        width: 90vw;
+        max-width: 350px;
+    }
+    .conv{
+        width: 100%;
+    }
+    .chartDiv{
+        width: 100%;
+    }
+    .chart{
+        max-width: 100%;
+        align-self: center;
+    }
 }
