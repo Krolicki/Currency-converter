@@ -18,6 +18,6 @@ buttons.forEach(function(but){
         changeDate();
         but.classList.add("activeButton");
         daysChart = parseInt(but.id.slice(6));
-        drawChart(opt.value, daysChart);
+        drawChart(opt.value, daysChart, optBot.value);
     })
 });

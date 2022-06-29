@@ -31,6 +31,7 @@ function initialize(){
     .catch(err => {
         calcDate.innerHTML = "Błąd przy pobieraniu kursów. <br> Brak połączenia z serwerem.<br> Proszę odczekać chwilę i odświeżyć stronę.";
         calcSection.style.display = "none";
+        document.querySelector('.chartDiv').style.display = "none";
         console.log("Błąd przy pobieraniu kursów. Brak połączenia z serwerem");
         console.log(err);
     });
@@ -105,7 +106,7 @@ async function getCurr(code){
     opt.value = "EUR";
     optBot.value = "PLN";
 
-    drawChart("EUR", 14);
+    drawChart("EUR", 14, "PLN");
   }
 
  function calcRate(rate, element, amount, rev){
@@ -147,7 +148,7 @@ function changeCurrency(){
     info.innerHTML = amount.value + " " + currencyList[opt.value].name + " to w przeliczeniu";
     converted.innerHTML = amountBot.value + " " + currencyList[optBot.value].name;
     if(opt.value != "PLN")
-        drawChart(opt.value, daysChart);
+        drawChart(opt.value, daysChart, optBot.value);
 }
 
 amount.addEventListener("input", function(){
