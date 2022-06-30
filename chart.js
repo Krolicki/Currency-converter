@@ -57,8 +57,19 @@ async function drawChart(currency, daysToShow, compareCurrency){
     }
 
     var gradient = canvas.getContext('2d').createLinearGradient(0, 0, 0, 170);
-    gradient.addColorStop(0, 'rgba(52,168,83,0.4)');
-    // gradient.addColorStop(0.5, 'rgba(52,168,83,0.1)');
+    var color;
+    if(data.at(-1) > (data[0] + 0.01)){
+        gradient.addColorStop(0, 'rgba(52,168,83,0.4)'); //green
+        color = "rgba(52,168,83,1)";
+    }
+    else if((data.at(-1) + 0.01) < data[0]){
+        gradient.addColorStop(0, 'rgba(234,67,53,0.4)'); //red
+        color = 'rgba(234,67,53,1)';
+    }
+    else{
+        gradient.addColorStop(0, 'rgba(112,117,122,0.4)'); //grey
+        color = "rgba(112,117,122,1)";
+    }
     gradient.addColorStop(1, 'rgba(255,255,255,0)');
 
     if(theChart != null){
@@ -78,21 +89,21 @@ async function drawChart(currency, daysToShow, compareCurrency){
             fill: true,
             lineTension: 0.1,
             backgroundColor: gradient,
-            borderColor: "rgba(52,168,83,1)",
+            borderColor: color,
             borderCapStyle: 'butt',
             borderDash: [],
             borderWidth: 2,
             borderDashOffset: 0.0,
             borderJoinStyle: 'miter',
-            pointBorderColor: "rgba(52,168,83,1)",
-            pointBackgroundColor: "rgba(52,168,83,1)",
+            pointBorderColor: color,
+            pointBackgroundColor: color,
             pointBorderWidth: 1,
             pointHoverRadius: 5,
-            pointHoverBackgroundColor: "rgba(52,168,83,1)",
+            pointHoverBackgroundColor: color,
             pointHoverBorderColor: "rgba(220,220,220,1)",
             pointHoverBorderWidth: 1,
             pointRadius: 0,
-            pointHitRadius: 1,
+            pointHitRadius: 5,
             }
         ]},
         options: {
