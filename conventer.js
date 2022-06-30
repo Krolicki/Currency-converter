@@ -147,7 +147,7 @@ function changeCurrency(){
     calcDate.innerHTML = "Na dzień: " + compareDate() + " (NBP)";
     info.innerHTML = amount.value + " " + currencyList[opt.value].name + " to w przeliczeniu";
     converted.innerHTML = amountBot.value + " " + currencyList[optBot.value].name;
-    if(opt.value != "PLN")
+   // if(opt.value != "PLN")
         drawChart(opt.value, daysChart, optBot.value);
 }
 

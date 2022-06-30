@@ -7,13 +7,21 @@ async function drawChart(currency, daysToShow, compareCurrency){
     let labels =[];
     let data =[];
 
+    let currencyMain;
     var days = daysToShow;
 
     pastDate.setDate(today.getDate() - days);
     pastDate = pastDate.toISOString().slice(0, 10);
     today = today.toISOString().slice(0, 10);
 
-    await fetch("http://api.nbp.pl/api/exchangerates/rates/A/"+currency+"/"+pastDate+"/"+today+"/")
+    if(currency == "PLN"){
+        currencyMain = compareCurrency;
+    }
+    else{
+        currencyMain = currency;
+    }
+
+    await fetch("http://api.nbp.pl/api/exchangerates/rates/A/"+currencyMain+"/"+pastDate+"/"+today+"/")
         .then(resp => {
             return resp.json();
         })
@@ -28,8 +36,7 @@ async function drawChart(currency, daysToShow, compareCurrency){
             console.log(err);
         });
 
-
-    if(compareCurrency != "PLN"){
+    if(compareCurrency != "PLN" && currency != "PLN"){
         await fetch("http://api.nbp.pl/api/exchangerates/rates/A/"+compareCurrency+"/"+pastDate+"/"+today+"/")
         .then(response => { return response.json(); })
         .then(response => {
@@ -42,6 +49,11 @@ async function drawChart(currency, daysToShow, compareCurrency){
         .catch(err =>{
             console.log(err);
         });
+    }
+    if(currency == "PLN"){
+        for(i = 0; i < data.length; i++){
+            data[i] = (1 / data[i]).toFixed(4);
+        }
     }
 
     var gradient = canvas.getContext('2d').createLinearGradient(0, 0, 0, 170);
