@@ -2,7 +2,10 @@ var theChart = null;
 
 async function drawChart(currency, daysToShow, compareCurrency){
     const canvas = document.getElementById("chart");
-    var today = new Date(currencyList[currency].date);
+
+
+    //var today = new Date(currencyList[currency].date);
+    var today = new Date(compareDate());
     var pastDate = new Date(today);
     let labels =[];
     let data =[];
@@ -43,7 +46,7 @@ async function drawChart(currency, daysToShow, compareCurrency){
             let compareData;
             for(i = 0; i < response.rates.length; i++){
                 compareData = response.rates[i].mid;
-                data[i] = (data[i] / compareData).toFixed(4);
+                data[i] = parseFloat((data[i] / compareData).toFixed(4));
             }
         })
         .catch(err =>{
@@ -58,11 +61,12 @@ async function drawChart(currency, daysToShow, compareCurrency){
 
     var gradient = canvas.getContext('2d').createLinearGradient(0, 0, 0, 170);
     var color;
-    if(data.at(-1) > (data[0] + 0.01)){
+
+    if(data.at(-1) > (data[0] + ( data[0] * 0.002 ))){
         gradient.addColorStop(0, 'rgba(52,168,83,0.4)'); //green
         color = "rgba(52,168,83,1)";
     }
-    else if((data.at(-1) + 0.01) < data[0]){
+    else if((data.at(-1) +( data[0] * 0.002 )) < data[0]){
         gradient.addColorStop(0, 'rgba(234,67,53,0.4)'); //red
         color = 'rgba(234,67,53,1)';
     }
