@@ -57,9 +57,13 @@ async function getCurr(code){
   
   async function assign(){
 
-    const codesList = await fetch('./codes.json')
+    //const codesList = await fetch('./codes.json')
+    const codesList = await fetch('http://api.nbp.pl/api/exchangerates/tables/a')
     .then(response => {
          return response.json();
+    })
+    .then(response =>{
+        return response[0].rates;
     })
     .catch( () => {
         console.log("Błąd przy odczycie pliku");
@@ -70,8 +74,8 @@ async function getCurr(code){
         amountBot.disabled = true;
     });
 
-    for(i = 0; i < codesList.code.length; i++){
-        await getCurr(codesList.code[i]);
+    for(i = 0; i < codesList.length; i++){
+        await getCurr(codesList[i].code);
     }
 
     currencyList["PLN"] = { name : "Złoty", rate : 1, date : new Date().toISOString().slice(0, 10)};
@@ -98,10 +102,8 @@ async function getCurr(code){
         el2.value = key;
         el2.innerHTML = value;
 
-        //if(key != "EUR")
-            opt.append(el);
-        //if(key != "PLN")
-            optBot.append(el2);
+        opt.append(el);
+        optBot.append(el2);
     };
     opt.value = "EUR";
     optBot.value = "PLN";
